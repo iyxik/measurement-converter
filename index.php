@@ -1,73 +1,10 @@
-<?php
-session_start();
-
-class PetShop
-{
-    public $petStorage = [];
-
-    public function __construct()
-    {
-        if (isset($_SESSION['petshop'])) {
-            $this->petStorage = $_SESSION['petshop'];
-        }
-    }
-
-    public function addPet($type, $species, $name, $age)
-    {
-        $this->petStorage[] = [
-            'type' => $type,
-            'species' => $species,
-            'name' => $name,
-            'age' => (int)$age
-        ];
-        $_SESSION['petshop'] = $this->petStorage;
-    }
-
-    public function info($petInfo)
-    {
-        return "Hello! My name is {$petInfo['name']} and I am a {$petInfo['type']}. I am a '{$petInfo['species']}' breed and I am {$petInfo['age']} years old.";
-    }
-
-    public function uniqueAction($petInfo)
-    {
-        if ($petInfo['type'] === 'dog') {
-            return "I am loyal to my owner";
-        } elseif ($petInfo['type'] === 'cat') {
-            return "My night vision is insane!";
-        } elseif ($petInfo['type'] === 'rabbit') {
-            return "My teeth grow constantly throughout my life";
-        } elseif ($petInfo['type'] === 'turtle') {
-            return "I am incredibly strong and persistent — especially when digging or swimming.";
-        } elseif ($petInfo['type'] === 'horse') {
-            return "I can remember people, places, and experiences — both good and bad — sometimes for life.";
-        }
-    }
-
-    public function display()
-    {
-        foreach ($this->petStorage as $petInfo) {
-            echo "<br>" . $this->info($petInfo) . "<br>";
-            echo $this->uniqueAction($petInfo) . "<br>";
-        }
-    }
-}
-
-$request = new PetShop();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $type = $_POST['type'];
-    $species = $_POST['species'];
-    $name = $_POST['name'];
-    $age = $_POST['age'];
-    $request->addPet($type, $species, $name, $age);
-}
-?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Pet shop manager</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP Calculator</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,29 +12,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="container">
-        <h1>Pet shop manager</h1>
-        <form method="POST">
-            <select name="type" required>
-                <option value="">Choose pet</option>
-                <option value="dog">Dog</option>
-                <option value="cat">Cat</option>
-                <option value="rabbit">Rabbit</option>
-                <option value="turtle">Turtle</option>
-                <option value="horse">Horse</option>
-            </select><br><br>
+    <h2 class="heading">Measurement Conversion</h2>
+    <form method="post">
+        <h3>Temperature</h3>
+        <input type="number" name="temperature" placeholder="Temperature (°Celsius)"><br><br>
 
-            <input type="text" name="species" placeholder="Species" required><br><br>
-            <input type="text" name="name" placeholder="Name" required><br><br>
-            <input type="number" name="age" placeholder="Age" required><br><br>
+        <h3>Speed</h3>
+        <input type="number" name="speed" placeholder="Speed (km/h)"><br><br>
 
-            <button type="submit">Add</button>
-        </form>
-        <h3>Description</h3>
-    </div>
-    <?php $request->display();
+        <h3>Mass</h3>
+        <input type="number" name="mass" placeholder="Mass (Kilograms)">
+        <input type="number" name="grams" placeholder="Mass (Grams)"><br><br>
+
+        <input type="submit" name="convert" value="Convert">
+    </form>
+
+    <?php
+    if ($_POST['convert']) {
+
+        /* Temperature */
+        if (!empty($_POST['temperature'])) {
+            $celsius = floatval($_POST['temperature']);
+            $farenheit = ($celsius * 9 / 5) + 32;
+            $kelvin = $celsius + 273;
+
+            echo "<h4>Temperature Conversions:</h4>";
+            echo "Fahrenheit: " . $farenheit . " °F<br>";
+            echo "Kelvin: " . $kelvin . " K<br><br>";
+        }
+
+        /* Speed */
+        if (!empty($_POST['speed'])) {
+            $kilometer = floatval($_POST['speed']);
+            $meter = $kilometer * 0.277778;
+            $knot = $kilometer * 0.539957;
+
+            echo "<h4>Speed Conversions:</h4>";
+            echo "Meters per second: " . $meter . " m/s<br>";
+            echo "Knots: " . $knot . " knots<br><br>";
+        }
+
+        /* kg to grams */
+        if (!empty($_POST['mass'])) {
+            $kilogram = floatval($_POST['mass']);
+            $gram = $kilogram * 1000;
+            echo "<h4>Mass (kg to grams):</h4>";
+            echo $kilogram . " kg = " . $gram . " grams<br><br>";
+        }
+
+        /* grams to kg */
+        if (!empty($_POST['grams'])) {
+            $grams = floatval($_POST['grams']);
+            $kilograms = $grams / 1000;
+            echo "<h4>Mass (grams to kg):</h4>";
+            echo $grams . " grams = " . $kilograms . " kg<br><br>";
+        }
+    }
     ?>
-
 </body>
 
 </html>
