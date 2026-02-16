@@ -28,7 +28,7 @@
     </form>
 
     <?php
-    if ($_POST['convert']) {
+    if (isset($_POST['convert'])) {
 
         /* Temperature */
         if (!empty($_POST['temperature'])) {
